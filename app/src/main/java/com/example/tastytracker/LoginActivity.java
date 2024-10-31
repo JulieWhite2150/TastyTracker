@@ -108,6 +108,13 @@ public class LoginActivity extends AppCompatActivity {
         userInfoDB.close();
     }
 
+    public void goBack(View view) {
+        Intent intent = new Intent(this, InitialActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     private void openSecondActivity(String username, int householdID) {
         Intent intent = new Intent(LoginActivity.this, InventoryActivity.class);
         intent.putExtra("USERNAME", username);

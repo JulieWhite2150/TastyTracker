@@ -8,12 +8,70 @@
     tools:context=".InventoryActivity">
 
     <TextView
-        android:id="@+id/invtext"
+        android:id="@+id/upper_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="inventory"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="upperText"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/lower_text"
+        app:layout_constraintHorizontal_bias="0.045" />
+
+    <TextView
+        android:id="@+id/lower_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="lowerText"
+        app:layout_constraintTop_toBottomOf="@+id/upper_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/listView"
+        app:layout_constraintHorizontal_bias="0.045" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@+id/lower_text"
+        app:layout_constraintBottom_toTopOf="@+id/addButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Add Item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/shoppingListButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/shoppingListButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Shopping List"
+        app:layout_constraintStart_toEndOf="@+id/addButton"
+        app:layout_constraintEnd_toStartOf="@+id/backToInitialButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/backToInitialButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        app:layout_constraintStart_toEndOf="@+id/shoppingListButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="16dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

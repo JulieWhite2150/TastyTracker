@@ -214,6 +214,13 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
+    public void goBack(View view) {
+        Intent intent = new Intent(this, InitialActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
     public static String getUsername(){
         return username;
     }

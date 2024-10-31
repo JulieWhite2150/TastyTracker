@@ -1,13 +1,8 @@
 package com.example.tastytracker;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class InventoryActivity extends AppCompatActivity {
 
@@ -17,5 +12,11 @@ public class InventoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inventory);
 
         TextView text = findViewById(R.id.invtext);
+
+        // Retrieve the householdID from the Intent
+        int householdID = getIntent().getIntExtra("HOUSEHOLD_ID", -1);
+
+        // Display the household ID in the TextView
+        text.setText("Inventory for household " + householdID);
     }
 }

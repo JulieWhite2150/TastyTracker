@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
            userInfoDB = new userInfoDBAdapter(this);
            userInfoDB.open();
+           //userInfoDB.clearAllUsers();
 
            loginButton.setOnClickListener(new View.OnClickListener() {
                @Override
@@ -46,11 +47,14 @@ public class LoginActivity extends AppCompatActivity {
         boolean isUsernameFound = false;
         int usernameIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_USERNAME);
         int passwordIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_PASSWORD);
+        int householdIDIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_HOUSEHOLD_ID);
 
         if (cursor.moveToFirst()) {
             do {
                 String storedUsername = cursor.getString(usernameIndex);
                 String storedPassword = cursor.getString(passwordIndex);
+                int householdID = cursor.getInt(householdIDIndex);
+
 
                 if (storedUsername != null && storedUsername.equals(username)) {
                     isUsernameFound = true;
@@ -60,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("END OF MAIN", "~~~~~~~~~~~~~~~~~~~~~~~~~");
                         userInfoDB.close();
                         cursor.close();
-                        openSecondActivity(username);
+                        openSecondActivity(username, householdID);
                         return;
                     } else {
                         showPasswordIncorrectAlert();
@@ -72,18 +76,21 @@ public class LoginActivity extends AppCompatActivity {
         cursor.close();
 
         if (!isUsernameFound) {
-            showUsernameNotFoundToast();
+            showUsernameNotFoundAlert();
         }
     }
-
-
 
     private void showLoginSuccessToast() {
         Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
     }
 
-    private void showUsernameNotFoundToast() {
-        Toast.makeText(LoginActivity.this, "Username not found!", Toast.LENGTH_SHORT).show();
+    private void showUsernameNotFoundAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Username Not Found")
+                .setMessage("The username you entered was not found.")
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
     }
 
     private void showPasswordIncorrectAlert() {
@@ -101,9 +108,10 @@ public class LoginActivity extends AppCompatActivity {
         userInfoDB.close();
     }
 
-    private void openSecondActivity(String username) {
+    private void openSecondActivity(String username, int householdID) {
         Intent intent = new Intent(LoginActivity.this, InventoryActivity.class);
         intent.putExtra("USERNAME", username);
+        intent.putExtra("HOUSEHOLD_ID", householdID);
         startActivity(intent);
         finish();
     }

@@ -3,20 +3,20 @@ package com.example.tastytracker;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
+//Activity to display the inventory and allow user to edit their households inventory
 public class InventoryActivity extends AppCompatActivity {
     private ListView listView;
-    private CustomAdapter adapter;
-    private trackerDBAdapter db;
-    private String username;
+    private foodDBAdapter db;
+    private final String username = UserSession.getInstance().getUsername();
     private int householdID;
+    Button backToInitialButton, addButton, shoppingListButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,6 @@ public class InventoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inventory);
 
         TextView upperText = findViewById(R.id.upper_text);
-        username = getIntent().getStringExtra("USERNAME");
         upperText.setText("Welcome " + username + "!");
 
         TextView lowerText = findViewById(R.id.lower_text);
@@ -33,51 +32,57 @@ public class InventoryActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
 
-        Button backToInitialButton = findViewById(R.id.backToInitialButton);
+        //Button to return the user to the initial (register/login) activity
+        backToInitialButton = findViewById(R.id.backToInitialButton);
         backToInitialButton.setOnClickListener(v -> {
             Intent intent = new Intent(InventoryActivity.this, InitialActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         });
 
-        Button addButton = findViewById(R.id.addButton);
+        //Button to allow user to add an item to the inventory, moves user to the edit item activity
+        addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(v -> {
             Intent intent = new Intent(InventoryActivity.this, EditItemActivity.class);
+            intent.putExtra("LOCATION", "add_inventory");
             intent.putExtra("HOUSEHOLD_ID", householdID);
             startActivity(intent);
         });
 
-        Button shoppingListButton = findViewById(R.id.shoppingListButton);
+        //Button to allow user to add item in inventory to the shopping list, moves user to edit item activity
+        shoppingListButton = findViewById(R.id.markAsShoppedButton);
         shoppingListButton.setOnClickListener(v -> {
             Intent intent = new Intent(InventoryActivity.this, ShoppingActivity.class);
             intent.putExtra("HOUSEHOLD_ID", householdID);
             startActivity(intent);
         });
 
+        //Load the list of current inventory
         new LoadList().execute(householdID);
     }
 
+    //Loads the current inventory using the list adapter and db adapter
     private class LoadList extends AsyncTask<Integer, Void, ArrayList<foodItem>> {
         @Override
         protected ArrayList<foodItem> doInBackground(Integer... params) {
             if (params.length == 0) {
-                return new ArrayList<>(); // Return empty list if no householdID is passed
+                return new ArrayList<>();
             }
 
             int householdID = params[0];
-            db = new trackerDBAdapter(InventoryActivity.this);
+            db = new foodDBAdapter(InventoryActivity.this);
             db.open(householdID);
-            return db.getAllItems(householdID);
+            return db.getInventoryItems(householdID);
         }
 
         @Override
         protected void onPostExecute(ArrayList<foodItem> inventoryList) {
             super.onPostExecute(inventoryList);
-            adapter = new CustomAdapter(InventoryActivity.this, inventoryList, householdID);
+            InventoryAdapter adapter = new InventoryAdapter(InventoryActivity.this, inventoryList, householdID);
             listView.setAdapter(adapter);
             db.close();
         }
     }
+
 }
 

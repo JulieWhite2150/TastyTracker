@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.widget.Button;
 import android.view.View;
 
+//Activity to let user pick to log in or register
 public class InitialActivity extends AppCompatActivity {
 
     @Override
@@ -20,6 +21,7 @@ public class InitialActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.login_button);
         Button registerButton = findViewById(R.id.register_button);
 
+        //If user clicks to login, navigate to login activity
         loginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -28,6 +30,7 @@ public class InitialActivity extends AppCompatActivity {
             }
         });
 
+        //If user clicks to register, navigate to register activity
         registerButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 Intent intent = new Intent(InitialActivity.this, RegisterActivity.class);

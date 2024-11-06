@@ -6,15 +6,23 @@
 
     <TextView
         android:id="@+id/itemNameTextView"
-        android:layout_width="210dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="1" />
 
     <TextView
         android:id="@+id/itemQuantityTextView"
-        android:layout_width="105dp"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/itemUnitTextView"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+       />
 
     <Button
         android:id="@+id/editButton"
@@ -28,6 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="10dp"
-        android:text="Add to Shopping List"/>
+        android:text="Add to Shopping"/>
 
 </LinearLayout>

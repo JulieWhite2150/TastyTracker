@@ -13,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText usernameEditText, passwordEditText, householdIDEditText;
-    Button registerButton, cancelButton;
+    Button registerButton;
     userInfoDBAdapter userInfoDB;
-    public static String username;
-    int householdID;
+    String enteredUsername, enteredPassword;
+    int enteredHouseholdID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,58 +31,72 @@ public class RegisterActivity extends AppCompatActivity {
         userInfoDB = new userInfoDBAdapter(this);
         userInfoDB.open();
 
+        //Tries to register the new user but handles a series of errors
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                username = usernameEditText.getText().toString();
-                final String password = passwordEditText.getText().toString();
-                householdID = getHouseholdIDFromString(householdIDEditText.getText().toString());
+                enteredUsername = usernameEditText.getText().toString();
+                enteredPassword = passwordEditText.getText().toString();
+                enteredHouseholdID = getHouseholdIDFromString(householdIDEditText.getText().toString());
 
-
-                if (username.isEmpty() || password.isEmpty()) {
+                //If user didn't enter text for username/password, show error
+                if (enteredUsername.isEmpty() || enteredPassword.isEmpty()) {
                     showUsernamePasswordEmptyAlert();
                     return;
                 }
 
-                if(!Character.isLetter(username.charAt(0))){
+                //If first character of username isn't a letter, show error
+                //User cannot use non-letter first char to make dbs consistent
+                if(!Character.isLetter(enteredUsername.charAt(0))){
                     showUsernameFirstCharacterAlert();
                     return;
                 }
 
-                // Check if username already exists
-                if (ifUsernameExists(username)) {
+                // Check if username already exists, if so, show error
+                if (userInfoDB.getUser(enteredUsername) != null) {
                     showUsernameExistsAlert();
                     return;
                 }
 
-                if (householdID == -1){
+                //If user entered a household ID that is not all digits, show error
+                if (enteredHouseholdID == -1){
                     showHouseholdIDHasNonDigitAlert();
                     return;
                 }
 
-                if (householdID != 0 && !householdIDExists(householdID)){
+                //If household ID entered does not exist, show error.
+                //Currently no way to delete a household, so all household ID's would be less than the next smallest HHID
+                if (enteredHouseholdID != 0 && enteredHouseholdID < getNewHouseHoldID()){
                     showHouseholdIDDoesNotExistAlert();
                     return;
                 }
 
-                if (householdID == 0){
-                    householdID = getNewHouseHoldID();
+                //If the user didn't enter a household ID, they need to have one generated
+                if (enteredHouseholdID == 0){
+                    enteredHouseholdID = getNewHouseHoldID();
                 }
 
 
                 // Register the user
-                long result = userInfoDB.insertUser(householdID, username, password);
+                long result = userInfoDB.insertUser(enteredHouseholdID, enteredUsername, enteredPassword);
+                //If registration successful, tell user and move to the inventory activity
                 if (result != -1) {
-
                     Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                    openSecondActivity(username);
-                } else {
+                    Intent intent = new Intent(RegisterActivity.this, InventoryActivity.class);
+                    UserSession.init(enteredUsername);
+                    intent.putExtra("HOUSEHOLD_ID", enteredHouseholdID);
+                    startActivity(intent);
+                    finish();
+                }
+                //else registration failed, show error
+                else {
                     showRegistrationFailAlert();
                 }
             }
         });
     }
 
+    //Tell the user that registration into db failed, ack is needed so AlertDialog used
     private void showRegistrationFailAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Registration Failed")
@@ -91,6 +105,8 @@ public class RegisterActivity extends AppCompatActivity {
                 .create()
                 .show();
     }
+
+    //Tell the user that they need to enter username and password, ack is needed so AlertDialog used
     private void showUsernamePasswordEmptyAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Username/Password Empty")
@@ -100,6 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .show();
     }
 
+    //Tell the user that the username must start with letter, ack is needed so AlertDialog used
     private void showUsernameFirstCharacterAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Username must begin with letter")
@@ -109,6 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .show();
     }
 
+    //Tell the user that entered username is taken, ack is needed so AlertDialog used
     private void showUsernameExistsAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Username Exists")
@@ -118,6 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .show();
     }
 
+    //Tell the user that household ID must be digit, ack is needed so AlertDialog used
     private void showHouseholdIDHasNonDigitAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Household ID Invalid")
@@ -127,6 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .show();
     }
 
+    //Tell the user that household id entered does not exist, ack is needed so AlertDialog used
     private void showHouseholdIDDoesNotExistAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Household ID Does Not Exist")
@@ -135,29 +155,14 @@ public class RegisterActivity extends AppCompatActivity {
                 .create()
                 .show();
     }
-    private boolean ifUsernameExists(String username) {
-        Cursor cursor = userInfoDB.getAllUsers();
-        boolean exists = false;
-        int usernameIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_USERNAME);
 
-        if (cursor.moveToFirst()) {
-            do {
-                String storedUsername = cursor.getString(usernameIndex);
-                if (storedUsername != null && storedUsername.equals(username)) {
-                    exists = true;
-                    break;
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return exists;
-    }
-
+    //If user needs a household ID (didn't give one) give user the next sequential, available HHID
     private int getNewHouseHoldID(){
         Cursor cursor = userInfoDB.getAllUsers();
         int IDIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_HOUSEHOLD_ID);
         int largestHHID = 0;
 
+        //Move through the users and find the highest HH ID value
         if (cursor.moveToFirst()) {
             do {
                 int storedID = cursor.getInt(IDIndex);
@@ -167,24 +172,13 @@ public class RegisterActivity extends AppCompatActivity {
             } while (cursor.moveToNext());
         }
         cursor.close();
+
+        //Set new user's HHID to largest current value + 1
         return largestHHID + 1;
     }
 
-    private boolean householdIDExists(int enteredHouseholdID){
-        Cursor cursor = userInfoDB.getAllUsers();
-        int IDIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_HOUSEHOLD_ID);
-
-        if (cursor.moveToFirst()) {
-            do {
-                int storedID = cursor.getInt(IDIndex);
-                if (storedID == enteredHouseholdID) {
-                    return true;
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return false;
-    }
+    //Method to take a string and determine if each char is a digit,
+    // if it is all digits, add each to figure out its int value (accounting for tens, hundreds, etc.)
     private int getHouseholdIDFromString(String householdIDString){
         if (householdIDString.isEmpty())
                 return 0;
@@ -196,33 +190,16 @@ public class RegisterActivity extends AppCompatActivity {
                 return -1;
             }
         }
-
         return Integer.parseInt(householdIDString);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        userInfoDB.close();
-    }
 
-    private void openSecondActivity(String username) {
-        Intent intent = new Intent(RegisterActivity.this, InventoryActivity.class);
-        intent.putExtra("USERNAME", username);
-        intent.putExtra("HOUSEHOLD_ID", householdID);
-        startActivity(intent);
-        finish();
-    }
 
+    //Used by the xml layout to move the user back to the initial screen
     public void goBack(View view) {
         Intent intent = new Intent(this, InitialActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        UserSession.init(enteredUsername);
         startActivity(intent);
         finish();
     }
-
-    public static String getUsername(){
-        return username;
-    }
-
 }

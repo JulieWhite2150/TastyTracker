@@ -4,15 +4,13 @@ import android.os.Bundle;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+//Activity that logs in a user that already has a registered account
 public class LoginActivity extends AppCompatActivity {
     EditText usernameEditText, passwordEditText;
     Button loginButton, cancelButton;
@@ -30,8 +28,8 @@ public class LoginActivity extends AppCompatActivity {
 
            userInfoDB = new userInfoDBAdapter(this);
            userInfoDB.open();
-           //userInfoDB.clearAllUsers();
 
+           //Button that takes in user input for username/password and calls the login method
            loginButton.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
@@ -42,48 +40,38 @@ public class LoginActivity extends AppCompatActivity {
            });
        }
 
-    private void login(String username, String password) {
-        Cursor cursor = userInfoDB.getAllUsers();
-        boolean isUsernameFound = false;
-        int usernameIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_USERNAME);
-        int passwordIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_PASSWORD);
-        int householdIDIndex = cursor.getColumnIndex(userInfoDBAdapter.KEY_HOUSEHOLD_ID);
 
-        if (cursor.moveToFirst()) {
-            do {
-                String storedUsername = cursor.getString(usernameIndex);
-                String storedPassword = cursor.getString(passwordIndex);
-                int householdID = cursor.getInt(householdIDIndex);
+    //Method that attempts to login the user, but checks for various errors and handles them appropriately
+    //If the username/password are correct, navigate the user to the inventory activity
+    private void login(String enteredUsername, String enteredPassword) {
+           User currentUser = userInfoDB.getUser(enteredUsername);
 
-
-                if (storedUsername != null && storedUsername.equals(username)) {
-                    isUsernameFound = true;
-                    if (storedPassword != null && storedPassword.equals(password)) {
-                        // Password is correct
-                        showLoginSuccessToast();
-                        Log.d("END OF MAIN", "~~~~~~~~~~~~~~~~~~~~~~~~~");
-                        userInfoDB.close();
-                        cursor.close();
-                        openSecondActivity(username, householdID);
-                        return;
-                    } else {
-                        showPasswordIncorrectAlert();
-                        return;
-                    }
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-        if (!isUsernameFound) {
-            showUsernameNotFoundAlert();
-        }
+           //if user was not found in db, then username does not exist
+           if (currentUser == null){
+               showUsernameNotFoundAlert();
+           }
+           //if password entered does not match password in db
+           else if (!currentUser.getPassword().equals(enteredPassword)){
+               showPasswordIncorrectAlert();
+           }
+           //else username/password correct, navigate to inventory activity
+           else{
+               showLoginSuccessToast();
+               userInfoDB.close();
+               Intent intent = new Intent(LoginActivity.this, InventoryActivity.class);
+               UserSession.init(username); //Initialize user session
+               intent.putExtra("HOUSEHOLD_ID", currentUser.getHouseholdID());
+               startActivity(intent);
+               finish();
+           }
     }
 
+    //Show the toast that the login was successful, toast is used just to inform the user-- no ack needed
     private void showLoginSuccessToast() {
         Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
     }
 
+    //Tell the user that username was not found, ack is needed so AlertDialog used
     private void showUsernameNotFoundAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Username Not Found")
@@ -93,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                 .show();
     }
 
+    //Tell the user that password was incorrect, ack is needed so AlertDialog used
     private void showPasswordIncorrectAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Password Incorrect")
@@ -102,28 +91,10 @@ public class LoginActivity extends AppCompatActivity {
                 .show();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        userInfoDB.close();
-    }
-
+    //used by the xml layout to move the user back to the initial screen
     public void goBack(View view) {
         Intent intent = new Intent(this, InitialActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
-
-    private void openSecondActivity(String username, int householdID) {
-        Intent intent = new Intent(LoginActivity.this, InventoryActivity.class);
-        intent.putExtra("USERNAME", username);
-        intent.putExtra("HOUSEHOLD_ID", householdID);
-        startActivity(intent);
-        finish();
-    }
-
-    /*public static String getUsername(){
-        return username;
-    }*/
 }

@@ -44,7 +44,9 @@ public class ShoppingActivity extends AppCompatActivity {
         addItem.setOnClickListener(v -> {
             Intent intent = new Intent(ShoppingActivity.this, EditItemActivity.class);
             intent.putExtra("HOUSEHOLD_ID", householdID);
-            intent.putExtra("LOCATION", "add_shopping");
+            intent.putExtra("MODE", "ADD");
+            intent.putExtra("RETURN", "SHOPPING");
+            intent.putExtra("TOADD", "SHOPPING");
             startActivity(intent);
             finish();
         });

@@ -44,7 +44,9 @@ public class InventoryActivity extends AppCompatActivity {
         addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(v -> {
             Intent intent = new Intent(InventoryActivity.this, EditItemActivity.class);
-            intent.putExtra("LOCATION", "add_inventory");
+            intent.putExtra("MODE", "ADD");
+            intent.putExtra("RETURN", "INVENTORY");
+            intent.putExtra("TOADD", "INVENTORY");
             intent.putExtra("HOUSEHOLD_ID", householdID);
             startActivity(intent);
         });

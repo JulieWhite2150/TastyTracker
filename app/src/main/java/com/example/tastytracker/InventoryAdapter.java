@@ -46,7 +46,9 @@ public class InventoryAdapter extends ArrayAdapter<foodItem> {
         //Take user to Edit item activity where they can add item to shoppping list
         shopButton.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, EditItemActivity.class);
-            intent.putExtra("LOCATION", "shopping_inventory");
+            intent.putExtra("MODE", "ADD");
+            intent.putExtra("RETURN", "INVENTORY");
+            intent.putExtra("TOADD", "SHOPPING");
             intent.putExtra("HOUSEHOLD_ID", householdID);
             intent.putExtra("ITEM_NAME", currentItem.getName());
             intent.putExtra("ITEM_QUANTITY", currentItem.getQuantity());
@@ -57,7 +59,9 @@ public class InventoryAdapter extends ArrayAdapter<foodItem> {
         //Take user to edit item activity where they can edit a specific item in the inventory
         editButton.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, EditItemActivity.class);
-            intent.putExtra("LOCATION", "edit_inventory");
+            intent.putExtra("MODE", "EDIT");
+            intent.putExtra("RETURN", "INVENTORY");
+            intent.putExtra("TOADD", "INVENTORY");
             intent.putExtra("HOUSEHOLD_ID", householdID);
             intent.putExtra("ITEM_NAME", currentItem.getName());
             intent.putExtra("ITEM_QUANTITY", currentItem.getQuantity());

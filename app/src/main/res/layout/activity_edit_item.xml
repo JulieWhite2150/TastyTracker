@@ -42,4 +42,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cancel" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF0000"
+        android:layout_marginTop="150dp"
+        android:text="Delete Item" />
 </LinearLayout>

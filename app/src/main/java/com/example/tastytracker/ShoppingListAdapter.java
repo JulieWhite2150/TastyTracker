@@ -47,7 +47,9 @@ public class ShoppingListAdapter extends ArrayAdapter<shoppingListItem> {
         //If the user presses edit, move to the edit item activity
         editButton.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, EditItemActivity.class);
-            intent.putExtra("LOCATION", "edit_shopping");
+            intent.putExtra("MODE", "EDIT");
+            intent.putExtra("RETURN", "SHOPPING");
+            intent.putExtra("TOADD", "SHOPPING");
             intent.putExtra("HOUSEHOLD_ID", householdID);
             intent.putExtra("ITEM_NAME", currentItem.getName());
             intent.putExtra("ITEM_QUANTITY", currentItem.getQuantity());
@@ -60,7 +62,6 @@ public class ShoppingListAdapter extends ArrayAdapter<shoppingListItem> {
             foodDBAdapter dbAdapter = new foodDBAdapter(mContext);
             dbAdapter.open(householdID);
             dbAdapter.flipShopped(householdID, currentItem.getName());
-            Log.d("Checkbox", "I flipped the shopped for " + currentItem.getName());
             dbAdapter.close();
         });
 

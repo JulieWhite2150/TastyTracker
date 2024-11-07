@@ -203,7 +203,8 @@ public class foodDBAdapter {
      * method again in other contexts.
      */
     public int deleteItem(int householdID, String itemName, String location) {
-        String tableName = "household_" + householdID + location;
+        String tableName = "household_" + householdID;
+        tableName = (location.equals("INVENTORY") ? tableName+"_inventoryItems" : tableName+"_shoppingList");
         String whereClause = KEY_ITEM + "=?";
         String[] whereArgs = {itemName};
 

@@ -135,15 +135,13 @@ public class foodDBAdapter {
 
 
     /*
-     * Method is used exclusively by the "Mark as shopped button" in the Shopping Activity.
-     * It is used to determine the quantity of an item that already is in the inventory to then
-     * sum with the bought amount.  If the method returns 0.0, then the caller will know that
-     * the item does not exist in the inventory, thus they should insert an item rather than edit.
-     * Functions also as a method to check whether an item is in a table or not.
+     * Method to determine the quantity of an item in a table.
+     * If the method returns 0.0, then the caller will know that
+     * the item does not exist in the table, thus they should insert an item rather than edit.
      */
-
-    public double getItemQuant(int householdID, String itemName) {
-        String tableName = "household_" + householdID + "_inventoryItems";
+    public double getItemQuant(int householdID, String itemName, String location) {
+        String tableName = "household_" + householdID;
+        tableName = (location.equals("INVENTORY") ? tableName+"_inventoryItems" : tableName+"_shoppingList");
         String[] columns = {KEY_ROWID, KEY_ITEM, KEY_QUANTITY, KEY_UNIT};
         String selection = KEY_ITEM + "=?";
         String[] selectionArgs = {itemName};
@@ -163,7 +161,7 @@ public class foodDBAdapter {
             cursor.close();
         }
 
-        return 0.0; //item is not in inventory
+        return 0.0; //item is not in table
     }
 
 

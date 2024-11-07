@@ -67,7 +67,7 @@ public class ShoppingActivity extends AppCompatActivity {
                 String shoppedUnit = shoppedItems.get(i).getUnit();
                 double shoppedQuant = shoppedItems.get(i).getQuantity();
 
-                double quantityInInventory = dbAdapter.getItemQuant(householdID, shoppedName);
+                double quantityInInventory = dbAdapter.getItemQuant(householdID, shoppedName, "INVENTORY");
 
                 //If quantity in inventory = 0, then the item is not in inventory and needs to be added
                 if (quantityInInventory == 0.0){

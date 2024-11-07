@@ -1,8 +1,8 @@
 package com.example.tastytracker;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -78,14 +78,7 @@ public class EditItemActivity extends AppCompatActivity {
             String itemUnitInput = itemUnitEditText.getText().toString().trim();
 
             if (itemNameInput.isEmpty() || itemQuantityInput.isEmpty() || itemUnitInput.isEmpty()) {
-                ////////HEREREREREEREREKEREEREEREERER FIX EHRERERERERERERHERERERHERHEHRHEEHRREHE
-                /*
-
-                    CHANGE THIS TO A POP UP AND PUT ALL IN CLASS
-
-
-                 */
-                Toast.makeText(EditItemActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                emptyFieldAlert();
                 return;
             }
 
@@ -94,11 +87,7 @@ public class EditItemActivity extends AppCompatActivity {
 
             //if the user is adding to inventory from inventory activity
             if (locationToAdd.equals("add_inventory")){
-                addItem(itemNameInput, roundedQuant, itemUnitInput, "INVENTORY");
-                Intent intent = new Intent(EditItemActivity.this, InventoryActivity.class);
-                intent.putExtra("HOUSEHOLD_ID", householdID);
-                startActivity(intent);
-                finish();
+                addItem(itemNameInput, roundedQuant, itemUnitInput, "INVENTORY", "INVENTORY");
             }
             //if the user is editing inventory from inventory activity
             else if(locationToAdd.equals("edit_inventory")) {
@@ -110,11 +99,7 @@ public class EditItemActivity extends AppCompatActivity {
             }
             //if the user is adding to shopping list from inventory activity
             else if (locationToAdd.equals("shopping_inventory")){
-                addItem(itemNameInput, roundedQuant, itemUnitInput, "SHOPPING");
-                Intent intent = new Intent(EditItemActivity.this, InventoryActivity.class);
-                intent.putExtra("HOUSEHOLD_ID", householdID);
-                startActivity(intent);
-                finish();
+                addItem(itemNameInput, roundedQuant, itemUnitInput, "SHOPPING", "INVENTORY");
             }
             //if the user is editing shopping list from shopping activity
             else if (locationToAdd.equals("edit_shopping")){
@@ -126,20 +111,35 @@ public class EditItemActivity extends AppCompatActivity {
             }
             //if the user is adding to shopping list from shopping activity
             else{
-                addItem(itemNameInput, roundedQuant, itemUnitInput, "SHOPPING");
-                Intent intent = new Intent(EditItemActivity.this, ShoppingActivity.class);
-                intent.putExtra("HOUSEHOLD_ID", householdID);
-                startActivity(intent);
-                finish();
+                addItem(itemNameInput, roundedQuant, itemUnitInput, "SHOPPING", "SHOPPING");
             }
         });
     }
 
     //This method calls the db adapter method insert item given a location
-    private void addItem(String itemName, double itemQuantity, String unit, String location){
+    private void addItem(String itemName, double itemQuantity, String unit, String addLocation, String returnLocation){
         foodDBAdapter dbAdapter = new foodDBAdapter(this);
         dbAdapter.open(householdID);
-        dbAdapter.insertItem(householdID, itemName, itemQuantity, unit, false, location);
+        double quantity = dbAdapter.getItemQuant(householdID, itemName, addLocation);
+        if (quantity == 0.0){
+            dbAdapter.insertItem(householdID, itemName, itemQuantity, unit, false, addLocation);
+
+            if (returnLocation.equals("INVENTORY")) {
+                Intent intent = new Intent(EditItemActivity.this, InventoryActivity.class);
+                intent.putExtra("HOUSEHOLD_ID", householdID);
+                startActivity(intent);
+                finish();
+            }
+            else{
+                Intent intent = new Intent(EditItemActivity.this, ShoppingActivity.class);
+                intent.putExtra("HOUSEHOLD_ID", householdID);
+                startActivity(intent);
+                finish();
+            }
+        }
+        else{
+            itemAlreadyExistsAlert();
+        }
         dbAdapter.close();
     }
 
@@ -151,6 +151,25 @@ public class EditItemActivity extends AppCompatActivity {
         dbAdapter.close();
     }
 
+    //Tell the user that household id entered does not exist, ack is needed so AlertDialog used
+    private void emptyFieldAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("At Least One Field Is Empty")
+                .setMessage("You must enter information for item name, quantity, and unit.")
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
+    }
+
+    //Tell the user that the item they are entering is already in table, ack is needed so AlertDialog used
+    private void itemAlreadyExistsAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Item Already Exists")
+                .setMessage("The item you are trying to add is already in the list. Please use the edit option instead.")
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
+    }
 
 }
 

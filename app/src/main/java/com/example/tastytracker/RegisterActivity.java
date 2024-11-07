@@ -66,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //If household ID entered does not exist, show error.
                 //Currently no way to delete a household, so all household ID's would be less than the next smallest HHID
-                if (enteredHouseholdID != 0 && enteredHouseholdID < getNewHouseHoldID()){
+                if (enteredHouseholdID != 0 && enteredHouseholdID >= getNewHouseHoldID()){
                     showHouseholdIDDoesNotExistAlert();
                     return;
                 }

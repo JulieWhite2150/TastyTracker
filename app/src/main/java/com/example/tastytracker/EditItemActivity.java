@@ -23,25 +23,34 @@ public class EditItemActivity extends AppCompatActivity {
         locationToAdd = getIntent().getStringExtra("LOCATION");
         TextView title = findViewById(R.id.title);
 
+        itemNameEditText = findViewById(R.id.itemNameEditText);
+        itemQuantityEditText = findViewById(R.id.itemQuantityEditText);
+        itemUnitEditText = findViewById(R.id.itemUnitEditText);
+        Button saveButton = findViewById(R.id.saveButton);
+        Button cancelButton = findViewById(R.id.cancelButton);
+
         //Series of if/else to set the proper instruction text depending on user context
         if (locationToAdd.equals("add_inventory")){
             title.setText("Enter information on the item to add to the inventory");
         }
         else if (locationToAdd.equals("edit_inventory")){
             title.setText("Edit information on the item in the inventory");
+            itemNameEditText.setEnabled(false);
         }
-        else if (locationToAdd.equals("shopping_inventory") || locationToAdd.equals("add_shopping")) {
+        else if (locationToAdd.equals("shopping_inventory")){
+            title.setText("Enter information on the item to add to the shopping list");
+            itemNameEditText.setEnabled(false); //user can only edit quantity
+            itemUnitEditText.setEnabled(false);
+        }
+        else if (locationToAdd.equals("add_shopping")){
             title.setText("Enter information on the item to add to the shopping list");
         }
         else{
             title.setText("Edit information on the item in the shopping list");
+            itemNameEditText.setEnabled(false);
         }
 
-        itemNameEditText = findViewById(R.id.itemNameEditText);
-        itemQuantityEditText = findViewById(R.id.itemQuantityEditText);
-        itemUnitEditText = findViewById(R.id.itemUnitEditText);
-        Button saveButton = findViewById(R.id.saveButton);
-        Button cancelButton = findViewById(R.id.cancelButton);
+
 
         householdID = getIntent().getIntExtra("HOUSEHOLD_ID", -1);
 

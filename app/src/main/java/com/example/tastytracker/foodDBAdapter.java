@@ -313,5 +313,32 @@ public class foodDBAdapter {
         return itemList;
     }
 
+    /*
+     * Used to ensure that if a user clicks the checkbox on the shopping list and then hits
+     * the back button, all the checked items have their shopped values reset to false.
+     */
+    public void resetShoppedItems(int householdID) {
+        if (db == null || !db.isOpen()) {
+            return;
+        }
+
+        String tableName = "household_" + householdID + "_shoppingList";
+        String[] columns = new String[]{KEY_ITEM, KEY_SHOPPED};
+        Cursor cursor = db.query(tableName, columns, null, null, null, null, null);
+
+        if (cursor != null) {
+            int colIndexItem = cursor.getColumnIndex(KEY_ITEM);
+            int colIndexShop = cursor.getColumnIndex(KEY_SHOPPED);
+
+            while (cursor.moveToNext()) {
+                String itemName = cursor.getString(colIndexItem);
+                boolean itemShop = cursor.getInt(colIndexShop) == 1;
+                if (itemShop) {
+                    flipShopped(householdID, itemName);
+                }
+            }
+            cursor.close();
+        }
+    }
 }
 

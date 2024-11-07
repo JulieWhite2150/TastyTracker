@@ -103,6 +103,10 @@ public class EditItemActivity extends AppCompatActivity {
             //Makes sure that the entered quantity is rounded to two decimal places
             double roundedQuant = Math.round(Double.parseDouble(itemQuantityInput)*100.0)/100.0;
 
+            if (roundedQuant <= 0.0){
+                quantityCannotBeZeroAlert();
+                return;
+            }
             //if the user is adding to inventory from inventory activity
             if (mode.equals("ADD")){
                 addItem(itemNameInput, roundedQuant, itemUnitInput, locationToAdd, returnLocation);
@@ -164,6 +168,16 @@ public class EditItemActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Item Already Exists")
                 .setMessage("The item you are trying to add is already in the list. Please use the edit option instead.")
+                .setPositiveButton("OK", null)
+                .create()
+                .show();
+    }
+
+    //Tell the user that the quantity of an item cannot be 0, ack is needed so AlertDialog used
+    private void quantityCannotBeZeroAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Quantity of Items Cannot be 0")
+                .setMessage("If you need to delete an item, use the delete button within the edit screen.")
                 .setPositiveButton("OK", null)
                 .create()
                 .show();

@@ -34,11 +34,7 @@ public class ShoppingActivity extends AppCompatActivity {
 
         //Button to navigate user back to inventory activity
         backToInventory.setOnClickListener(v -> {
-            //Make sure user didn't click checkboxes, reset all shopped values to false
-            dbAdapter = new foodDBAdapter(this);
-            dbAdapter.open(householdID);
-            dbAdapter.resetShoppedItems(householdID);
-            dbAdapter.close();
+            resetAllShoppedValues(householdID);
 
             //Navigate back to Inventory
             Intent intent = new Intent(ShoppingActivity.this, InventoryActivity.class);
@@ -104,6 +100,14 @@ public class ShoppingActivity extends AppCompatActivity {
         ShoppingListAdapter adapter = new ShoppingListAdapter(this, shoppingListItems, householdID);
 
         listView.setAdapter(adapter);
+        dbAdapter.close();
+    }
+
+    public void resetAllShoppedValues(int householdID){
+        //Make sure user didn't click checkboxes, reset all shopped values to false
+        dbAdapter = new foodDBAdapter(this);
+        dbAdapter.open(householdID);
+        dbAdapter.resetShoppedItems(householdID);
         dbAdapter.close();
     }
 }

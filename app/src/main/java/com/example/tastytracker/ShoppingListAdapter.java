@@ -46,6 +46,7 @@ public class ShoppingListAdapter extends ArrayAdapter<shoppingListItem> {
 
         //If the user presses edit, move to the edit item activity
         editButton.setOnClickListener(v -> {
+            resetAllShoppedValues(householdID);
             Intent intent = new Intent(mContext, EditItemActivity.class);
             intent.putExtra("MODE", "EDIT");
             intent.putExtra("RETURN", "SHOPPING");
@@ -66,6 +67,14 @@ public class ShoppingListAdapter extends ArrayAdapter<shoppingListItem> {
         });
 
         return view;
+    }
+
+    public void resetAllShoppedValues(int householdID){
+        //Make sure user didn't click checkboxes, reset all shopped values to false
+        foodDBAdapter dbAdapter = new foodDBAdapter(mContext);
+        dbAdapter.open(householdID);
+        dbAdapter.resetShoppedItems(householdID);
+        dbAdapter.close();
     }
 
 }

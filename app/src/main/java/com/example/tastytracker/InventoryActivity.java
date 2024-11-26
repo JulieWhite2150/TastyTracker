@@ -64,11 +64,16 @@ public class InventoryActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        if (UserSession.getInstance().getPermissions().equals("MWOP")){
+            addButton.setVisibility(TextView.GONE);
+        }
+
         //Button to allow user to add item in inventory to the shopping list, moves user to edit item activity
         shoppingListButton = findViewById(R.id.shoppingListButton);
         shoppingListButton.setOnClickListener(v -> {
             Intent intent = new Intent(InventoryActivity.this, ShoppingActivity.class);
             intent.putExtra("HOUSEHOLD_ID", householdID);
+            intent.putExtra("PERMISSIONS", UserSession.getInstance().getPermissions());
             startActivity(intent);
         });
 

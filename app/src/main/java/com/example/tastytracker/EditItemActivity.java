@@ -47,6 +47,10 @@ public class EditItemActivity extends AppCompatActivity {
                     itemNameEditText.setEnabled(false);
                     itemUnitEditText.setEnabled(false);
                 }
+
+                if(UserSession.getInstance().getPermissions().equals("MWOP")){
+                    saveButton.setText("Request to Add");
+                }
             }
         }
         else{
@@ -57,6 +61,9 @@ public class EditItemActivity extends AppCompatActivity {
             }
             else{
                 title.append("shopping list.");
+                if(UserSession.getInstance().getPermissions().equals("MWOP")){
+                    deleteButton.setVisibility(TextView.GONE);
+                }
             }
         }
 
@@ -121,8 +128,13 @@ public class EditItemActivity extends AppCompatActivity {
     private void addItem(String itemName, double itemQuantity, String unit, String addLocation, String returnLocation){
         foodDBAdapter dbAdapter = new foodDBAdapter(this);
         dbAdapter.open(householdID);
+
         double quantity = dbAdapter.getItemQuant(householdID, itemName, addLocation);
         if (quantity == 0.0){
+            if (UserSession.getInstance().getPermissions().equals("MWOP")){
+                addLocation = "REQUESTS";
+            }
+
             dbAdapter.insertItem(householdID, itemName, itemQuantity, unit, false, addLocation);
             returnToLocation(returnLocation);
         }

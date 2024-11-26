@@ -97,7 +97,7 @@ public class foodDBAdapter {
      *The boolean shopped is not necessary for an inventory item but is a parameter to allow for one
      *method to cover all insertion cases, given this all inventory insertions pass "false" for shopped.
      */
-    public long insertItem(int householdID, String item, double quantity, String unit, boolean shopped, String location) {
+    public void insertItem(int householdID, String item, double quantity, String unit, boolean shopped, String location) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_ITEM, item); //Item name, common to both inventory/shopping
         initialValues.put(KEY_QUANTITY, quantity); //Item quantity, common to both inventory/shopping
@@ -105,11 +105,11 @@ public class foodDBAdapter {
 
         //If the item is being added to the inventory table
         if (location.equals("INVENTORY")){
-            return db.insert("household_" + householdID + "_inventoryItems", null, initialValues);
+            db.insert("household_" + householdID + "_inventoryItems", null, initialValues);
         }
 
         //If the item is being added to the shopping list table
-        else{
+        else if (location.equals("SHOPPING")){
             int intShopped; //Shopped is stored as a tiny int in the db, so convert boolean to int
             if (shopped){
                 intShopped = 1;
@@ -119,7 +119,11 @@ public class foodDBAdapter {
             }
 
             initialValues.put(KEY_SHOPPED, intShopped);
-            return db.insert("household_" + householdID + "_shoppingList", null, initialValues);
+            db.insert("household_" + householdID + "_shoppingList", null, initialValues);
+        }
+
+        else{
+            db.insert("household_" + householdID + "_Requests", null, initialValues);
         }
     }
 

@@ -53,6 +53,7 @@ public class InventoryAdapter extends ArrayAdapter<foodItem> {
             intent.putExtra("ITEM_NAME", currentItem.getName());
             intent.putExtra("ITEM_QUANTITY", currentItem.getQuantity());
             intent.putExtra("ITEM_UNIT", currentItem.getUnit());
+            intent.putExtra("PERMISSIONS", UserSession.getInstance().getPermissions());
             mContext.startActivity(intent);
         });
 

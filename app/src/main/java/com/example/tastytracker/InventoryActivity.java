@@ -87,7 +87,7 @@ public class InventoryActivity extends AppCompatActivity {
             int householdID = params[0];
             db = new foodDBAdapter(InventoryActivity.this);
             db.open(householdID);
-            return db.getInventoryItems(householdID);
+            return db.getInventoryOrRequestItems(householdID, "_inventoryItems");
         }
 
         @Override

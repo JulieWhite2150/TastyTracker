@@ -42,5 +42,12 @@ public class ManageHouseholdActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        //Button to return the user to the inventory activity
+        requestsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ManageHouseholdActivity.this, ManageRequestsActivity.class);
+            startActivity(intent);
+            finish();
+        });
     }
 }

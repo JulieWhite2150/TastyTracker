@@ -17,7 +17,7 @@ public class foodDBAdapter {
     static final String KEY_QUANTITY = "quantity";
     static final String KEY_UNIT = "unit";
     static final String KEY_SHOPPED = "shopped";
-    static final int DATABASE_VERSION = 2; // Increment version to trigger onUpgrade
+    static final int DATABASE_VERSION = 3; // Increment version to trigger onUpgrade
 
     private final Context context;
     private DatabaseHelper DBHelper;
@@ -52,9 +52,15 @@ public class foodDBAdapter {
                     + KEY_UNIT + " TEXT,"
                     + KEY_SHOPPED + " TINYINT);";
 
+            String createRequestTableQuery = "CREATE TABLE IF NOT EXISTS household_" + householdID + "_Requests ("
+                    + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + KEY_ITEM + " TEXT, "
+                    + KEY_QUANTITY + " DOUBLE, "
+                    + KEY_UNIT + " TEXT);";
             try {
                 db.execSQL(createInventoryTableQuery);
                 db.execSQL(createShoppingListTableQuery);
+                db.execSQL(createRequestTableQuery);
             } catch (SQLException e) {
                 e.printStackTrace(); //Print stack trace if there is an error creating the tables
             }
@@ -68,6 +74,7 @@ public class foodDBAdapter {
 
             db.execSQL("DROP TABLE IF EXISTS household_" + householdID + "_inventoryItems");
             db.execSQL("DROP TABLE IF EXISTS household_" + householdID + "_shoppingList");
+            db.execSQL("DROP TABLE IF EXISTS household_" + householdID + "_Requests");
             onCreate(db);
         }
     }
@@ -248,14 +255,14 @@ public class foodDBAdapter {
      * Method to get an ArrayList of every row of the inventory table in the db as foodItems.
      * This method is used by the inventory list adapter to properly display the list.
      */
-    public ArrayList<foodItem> getInventoryItems(int householdID) {
+    public ArrayList<foodItem> getInventoryOrRequestItems(int householdID, String location) {
         ArrayList<foodItem> list = new ArrayList<>();
 
         if (db == null || !db.isOpen()) {
             return list;
         }
 
-        String tableName = "household_" + householdID + "_inventoryItems";
+        String tableName = "household_" + householdID + location;
         String[] columns = new String[]{KEY_ITEM, KEY_QUANTITY, KEY_UNIT};
         Cursor cursor = db.query(tableName, columns, null, null, null, null, null);
 

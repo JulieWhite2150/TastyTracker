@@ -42,7 +42,5 @@
             android:text="Manage Requests"
             android:layout_marginStart="16dp" />
     </LinearLayout>
-
-
 </LinearLayout>
 

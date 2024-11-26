@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                showLoginSuccessToast();
                userInfoDB.close();
                Intent intent = new Intent(LoginActivity.this, InventoryActivity.class);
-               UserSession.init(username); //Initialize user session
+               UserSession.init(currentUser); //Initialize user session
                intent.putExtra("HOUSEHOLD_ID", currentUser.getHouseholdID());
                startActivity(intent);
                finish();

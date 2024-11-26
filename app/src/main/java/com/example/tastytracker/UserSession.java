@@ -2,16 +2,16 @@ package com.example.tastytracker;
 
 public class UserSession {
     private static UserSession instance;
-    private final String username;
+    private final User currentUser;
 
     //Constructor
-    private UserSession(String username) {
-        this.username = username;
+    private UserSession(User currentUser) {
+        this.currentUser = currentUser;
     }
 
     //Initialize the user session and store the username through the constructor
-    public static void init(String username) {
-            instance = new UserSession(username);
+    public static void init(User currentUser) {
+            instance = new UserSession(currentUser);
     }
 
     //Get instance and throw exception if no user session has been created
@@ -24,7 +24,19 @@ public class UserSession {
 
     //Getter method to get the username for the instance
     public String getUsername() {
-        return username;
+        return currentUser.getUsername();
+    }
+
+    public String getPermissions(){
+        return currentUser.getPermissions();
+    }
+
+    public void setPermissions(String newPermissions){
+        currentUser.changePermissions(newPermissions);
+    }
+
+    public int getHouseholdID(){
+        return currentUser.getHouseholdID();
     }
 }
 

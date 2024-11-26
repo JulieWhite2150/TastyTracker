@@ -61,7 +61,6 @@ public class EditItemActivity extends AppCompatActivity {
         }
 
 
-
         householdID = getIntent().getIntExtra("HOUSEHOLD_ID", -1);
 
         String itemName = getIntent().getStringExtra("ITEM_NAME");

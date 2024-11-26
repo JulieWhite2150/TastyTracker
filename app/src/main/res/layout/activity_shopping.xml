@@ -37,13 +37,13 @@
         android:layout_height="wrap_content"
         android:text="Add Item"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/markAsShoppedButton"
+        app:layout_constraintEnd_toStartOf="@+id/shoppingListButton"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="16dp" />
 
     <Button
-        android:id="@+id/markAsShoppedButton"
+        android:id="@+id/shoppingListButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Mark as Shopped"
@@ -59,7 +59,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Back"
-        app:layout_constraintStart_toEndOf="@+id/markAsShoppedButton"
+        app:layout_constraintStart_toEndOf="@+id/shoppingListButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="4dp"

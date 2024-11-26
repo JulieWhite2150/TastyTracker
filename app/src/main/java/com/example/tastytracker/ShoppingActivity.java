@@ -26,7 +26,7 @@ public class ShoppingActivity extends AppCompatActivity {
         loadShoppingListItems(); //Load the shopping list
 
         Button addItem = findViewById(R.id.addButton);
-        Button markAsShopped = findViewById(R.id.markAsShoppedButton);
+        Button markAsShopped = findViewById(R.id.shoppingListButton);
         Button backToInventory = findViewById(R.id.backToInventory);
 
         TextView introText = findViewById(R.id.intro_text);

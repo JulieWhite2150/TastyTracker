@@ -15,7 +15,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText usernameEditText, passwordEditText, householdIDEditText;
     Button registerButton;
     userInfoDBAdapter userInfoDB;
-    String enteredUsername, enteredPassword;
+    String enteredUsername, enteredPassword, permissions;
     int enteredHouseholdID;
 
     @Override
@@ -74,16 +74,18 @@ public class RegisterActivity extends AppCompatActivity {
                 //If the user didn't enter a household ID, they need to have one generated
                 if (enteredHouseholdID == 0){
                     enteredHouseholdID = getNewHouseHoldID();
+                    permissions = "HH"; //the user is the first member of their house, they have head of household privileges
+                }else{
+                    permissions = "MWP"; //user is not first member of their house, they have MWP privileges.
                 }
 
-
                 // Register the user
-                long result = userInfoDB.insertUser(enteredHouseholdID, enteredUsername, enteredPassword);
+                long result = userInfoDB.insertUser(enteredHouseholdID, enteredUsername, enteredPassword, permissions);
                 //If registration successful, tell user and move to the inventory activity
                 if (result != -1) {
                     Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegisterActivity.this, InventoryActivity.class);
-                    UserSession.init(enteredUsername);
+                    UserSession.init(new User(enteredUsername, enteredPassword, enteredHouseholdID, permissions));
                     intent.putExtra("HOUSEHOLD_ID", enteredHouseholdID);
                     startActivity(intent);
                     finish();
@@ -193,12 +195,10 @@ public class RegisterActivity extends AppCompatActivity {
         return Integer.parseInt(householdIDString);
     }
 
-
-
     //Used by the xml layout to move the user back to the initial screen
     public void goBack(View view) {
         Intent intent = new Intent(this, InitialActivity.class);
-        UserSession.init(enteredUsername);
+        //UserSession.init(enteredUsername);
         startActivity(intent);
         finish();
     }

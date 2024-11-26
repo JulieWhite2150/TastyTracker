@@ -15,7 +15,7 @@ public class InventoryActivity extends AppCompatActivity {
     private foodDBAdapter db;
     private final String username = UserSession.getInstance().getUsername();
     private int householdID;
-    Button backToInitialButton, addButton, shoppingListButton;
+    Button backToInitialButton, addButton, shoppingListButton, settingsButton;
 
 
     @Override
@@ -27,8 +27,21 @@ public class InventoryActivity extends AppCompatActivity {
         upperText.setText("Welcome " + username + "!");
 
         TextView lowerText = findViewById(R.id.lower_text);
-        householdID = getIntent().getIntExtra("HOUSEHOLD_ID", -1);
+        householdID = UserSession.getInstance().getHouseholdID();
         lowerText.setText("Inventory for household " + householdID);
+
+        settingsButton = findViewById(R.id.settingsButton);
+
+        //Restrict users without HH permissions from being able to access the settings
+        if (!UserSession.getInstance().getPermissions().equals("HH")){
+            settingsButton.setVisibility(TextView.GONE);
+        }
+
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(InventoryActivity.this, ManageHouseholdActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         listView = findViewById(R.id.listView);
 
@@ -52,7 +65,7 @@ public class InventoryActivity extends AppCompatActivity {
         });
 
         //Button to allow user to add item in inventory to the shopping list, moves user to edit item activity
-        shoppingListButton = findViewById(R.id.markAsShoppedButton);
+        shoppingListButton = findViewById(R.id.shoppingListButton);
         shoppingListButton.setOnClickListener(v -> {
             Intent intent = new Intent(InventoryActivity.this, ShoppingActivity.class);
             intent.putExtra("HOUSEHOLD_ID", householdID);

@@ -61,6 +61,7 @@
             android:contentDescription="Settings"
             android:layout_marginBottom="16dp"
             android:background="@drawable/gear_icon"
+            android:visibility="invisible"
             />
 
         <TextView
@@ -75,6 +76,7 @@
             android:textSize="12sp"
             android:translationX="-5dp"
             android:translationY="0dp"
+            android:visibility="invisible"
             />
     </FrameLayout>
 
@@ -112,7 +114,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/shopping_cart"
+        android:background="@drawable/list"
         android:contentDescription="Shopping List Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

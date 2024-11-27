@@ -1,8 +1,11 @@
 package com.example.tastytracker;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.util.Log;
 
@@ -25,12 +28,12 @@ public class ShoppingActivity extends AppCompatActivity {
 
         loadShoppingListItems(); //Load the shopping list
 
-        Button addItem = findViewById(R.id.addButton);
-        Button markAsShopped = findViewById(R.id.shoppingListButton);
-        Button backToInventory = findViewById(R.id.backToInventory);
+        ImageButton addItem = findViewById(R.id.addButton);
+        ImageButton markAsShopped = findViewById(R.id.markAsShoppedButton);
+        ImageButton backToInventory = findViewById(R.id.backButton);
 
         TextView introText = findViewById(R.id.intro_text);
-        introText.setText("Viewing Shopping List for Household " + householdID);
+        introText.setText("Shopping List for Household #" + householdID);
 
         //Button to navigate user back to inventory activity
         backToInventory.setOnClickListener(v -> {
@@ -88,6 +91,16 @@ public class ShoppingActivity extends AppCompatActivity {
             }
             dbAdapter.close();
             loadShoppingListItems(); //reload the list
+        });
+
+        ImageButton questionButton = findViewById(R.id.question);
+        questionButton.setOnClickListener(v -> {
+            // Create and display the AlertDialog
+            new AlertDialog.Builder(this)
+                    .setTitle("Mark as Shopped")
+                    .setMessage("Use the checkboxes to select the items you have purchased. \n\nOnce you've selected the items, press the shopping cart button to move them from your shopping list to your inventory. \n\nThis will help you easily update your shopping list and inventory!")
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .show();
         });
     }
 

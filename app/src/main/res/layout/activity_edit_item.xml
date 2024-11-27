@@ -2,26 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#d6fafe"
+    android:padding="20dp">
 
     <TextView
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/title"
+        android:fontFamily="@font/quicksand"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:text="Item Information"/>
 
     <EditText
         android:id="@+id/itemNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/edittext_styled"
+        android:layout_marginTop="50dp"
+        android:textSize="22sp"
         android:hint="Item Name" />
 
     <EditText
         android:id="@+id/itemQuantityEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/edittext_styled"
+        android:textSize="22sp"
         android:hint="Quantity"
         android:inputType="numberDecimal" />
 
@@ -29,26 +39,40 @@
         android:id="@+id/itemUnitEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/edittext_styled"
+        android:textSize="22sp"
         android:hint="Unit"
         />
 
     <Button
         android:id="@+id/saveButton"
+        android:fontFamily="@font/quicksand"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#04adbf"
         android:text="Save" />
 
     <Button
         android:id="@+id/cancelButton"
+        android:fontFamily="@font/quicksand"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#04adbf"
         android:text="Cancel" />
 
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/quicksand"
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:backgroundTint="#FF0000"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:text="Delete Item" />
 </LinearLayout>

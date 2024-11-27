@@ -14,7 +14,6 @@ public class EditItemActivity extends AppCompatActivity {
     private EditText itemUnitEditText;
     private int householdID;
     private String mode, returnLocation, locationToAdd;
-    private Button deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +31,7 @@ public class EditItemActivity extends AppCompatActivity {
         itemUnitEditText = findViewById(R.id.itemUnitEditText);
         Button saveButton = findViewById(R.id.saveButton);
         Button cancelButton = findViewById(R.id.cancelButton);
-        deleteButton = findViewById(R.id.deleteButton);
+        Button deleteButton = findViewById(R.id.deleteButton);
 
         //Series of if/else to set the proper instruction text/button visibility depending on user context
         if (mode.equals("ADD")){

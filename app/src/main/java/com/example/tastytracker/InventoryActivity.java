@@ -17,8 +17,7 @@ public class InventoryActivity extends AppCompatActivity {
     private foodDBAdapter db;
     private final String username = UserSession.getInstance().getUsername();
     private int householdID;
-    Button backToInitialButton, addButton, shoppingListButton;
-    ImageButton settingsButton;
+    ImageButton settingsButton, backToInitialButton, addButton, shoppingListButton;
 
 
     @Override
@@ -31,7 +30,7 @@ public class InventoryActivity extends AppCompatActivity {
 
         TextView lowerText = findViewById(R.id.lower_text);
         householdID = UserSession.getInstance().getHouseholdID();
-        lowerText.setText("Inventory for household " + householdID);
+        lowerText.setText("Inventory for household #" + householdID);
 
         settingsButton = findViewById(R.id.settingsButton);
 
@@ -53,7 +52,7 @@ public class InventoryActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
 
         //Button to return the user to the initial (register/login) activity
-        backToInitialButton = findViewById(R.id.backToInitialButton);
+        backToInitialButton = findViewById(R.id.backButton);
         backToInitialButton.setOnClickListener(v -> {
             Intent intent = new Intent(InventoryActivity.this, InitialActivity.class);
             startActivity(intent);

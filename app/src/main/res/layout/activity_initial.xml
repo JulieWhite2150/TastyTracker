@@ -37,10 +37,11 @@
         android:layout_marginTop="4dp"
         android:fontFamily="@font/quicksand"
         android:gravity="center"
-        android:text="Your Pantry, Fridge, and Shopping List All in One Place"
+        android:text="Your Pantry, Fridge, and Shopping List\nAll in One Place"
         android:textSize="21dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcomeText" />
 
     <TextView

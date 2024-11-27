@@ -25,7 +25,7 @@
         android:layout_marginTop="50dp"
         android:text="Welcome username!"
         android:fontFamily="@font/quicksand"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/lower_text"
         app:layout_constraintEnd_toEndOf="parent"

@@ -84,7 +84,7 @@ public class ShoppingActivity extends AppCompatActivity {
                     dbAdapter.updateItem(householdID, shoppedName, totalQuant, shoppedUnit, "INVENTORY");
                 }
                 //remove item from the shopping list
-                dbAdapter.deleteItem(householdID, shoppedName, "_shoppingList");
+                dbAdapter.deleteItem(householdID, shoppedName, "SHOPPING");
             }
             dbAdapter.close();
             loadShoppingListItems(); //reload the list

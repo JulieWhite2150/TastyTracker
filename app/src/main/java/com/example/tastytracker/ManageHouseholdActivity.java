@@ -2,6 +2,7 @@ package com.example.tastytracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -33,6 +34,11 @@ public class ManageHouseholdActivity extends AppCompatActivity {
         HouseholdListAdapter adapter = new HouseholdListAdapter(this, users, householdID);
         listView.setAdapter(adapter);
 
+        foodDBAdapter foodDB = new foodDBAdapter(this);
+        foodDB.open(householdID);
+        updateNotificationBubble(foodDB.getNumberOfRequests(householdID));
+        foodDB.close();
+
         Button backButton = findViewById(R.id.backButton);
         Button requestsButton = findViewById(R.id.RequestsButton);
 
@@ -49,5 +55,15 @@ public class ManageHouseholdActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    private void updateNotificationBubble(int numRequests) {
+        TextView notificationBubble = findViewById(R.id.notificationBubble);
+        if (numRequests > 0) {
+            notificationBubble.setVisibility(View.VISIBLE);
+            notificationBubble.setText(String.valueOf(numRequests));
+        } else {
+            notificationBubble.setVisibility(View.GONE);
+        }
     }
 }

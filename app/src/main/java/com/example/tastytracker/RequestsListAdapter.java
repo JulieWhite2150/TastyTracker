@@ -33,7 +33,6 @@ public class RequestsListAdapter extends RecyclerView.Adapter<RequestsListAdapte
             itemNameTextView = itemView.findViewById(R.id.itemNameTextView);
             itemQuantityTextView = itemView.findViewById(R.id.itemQuantityTextView);
             itemUnitTextView = itemView.findViewById(R.id.itemUnitTextView);
-            whereToAddTextView = itemView.findViewById(R.id.whereToAddTextView);
         }
     }
 

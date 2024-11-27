@@ -3,7 +3,9 @@ package com.example.tastytracker;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +17,8 @@ public class InventoryActivity extends AppCompatActivity {
     private foodDBAdapter db;
     private final String username = UserSession.getInstance().getUsername();
     private int householdID;
-    Button backToInitialButton, addButton, shoppingListButton, settingsButton;
+    Button backToInitialButton, addButton, shoppingListButton;
+    ImageButton settingsButton;
 
 
     @Override
@@ -33,8 +36,12 @@ public class InventoryActivity extends AppCompatActivity {
         settingsButton = findViewById(R.id.settingsButton);
 
         //Restrict users without HH permissions from being able to access the settings
-        if (!UserSession.getInstance().getPermissions().equals("HH")){
-            settingsButton.setVisibility(TextView.GONE);
+        if (UserSession.getInstance().getPermissions().equals("HH")){
+            settingsButton.setVisibility(TextView.VISIBLE);
+            foodDBAdapter foodDB = new foodDBAdapter(this);
+            foodDB.open(householdID);
+            updateNotificationBubble(foodDB.getNumberOfRequests(householdID));
+            foodDB.close();
         }
 
         settingsButton.setOnClickListener(v -> {
@@ -101,6 +108,16 @@ public class InventoryActivity extends AppCompatActivity {
             InventoryAdapter adapter = new InventoryAdapter(InventoryActivity.this, inventoryList, householdID);
             listView.setAdapter(adapter);
             db.close();
+        }
+    }
+
+    private void updateNotificationBubble(int numRequests) {
+        TextView notificationBubble = findViewById(R.id.notificationBubble);
+        if (numRequests > 0) {
+            notificationBubble.setVisibility(View.VISIBLE);
+            notificationBubble.setText(String.valueOf(numRequests));
+        } else {
+            notificationBubble.setVisibility(View.GONE);
         }
     }
 

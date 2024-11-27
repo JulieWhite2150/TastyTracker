@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 //Activity that logs in a user that already has a registered account
 public class LoginActivity extends AppCompatActivity {
     EditText usernameEditText, passwordEditText;
-    Button loginButton, cancelButton;
+    Button loginButton;
     userInfoDBAdapter userInfoDB;
     public static String username;
 

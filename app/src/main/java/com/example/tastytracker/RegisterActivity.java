@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +27,17 @@ public class RegisterActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.usernameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         householdIDEditText = findViewById(R.id.householdIDEditText);
+        ImageButton questionButton = findViewById(R.id.question);
+        questionButton.setOnClickListener(v -> {
+            // Create and display the AlertDialog
+            new AlertDialog.Builder(this)
+                    .setTitle("What is a Household ID?")
+                    .setMessage("The Household ID links your account to your household's shared profile. \n\nIf you're the first member, don't enter one and we'll generate one for you. \n\nIf you're joining, ask another household member for the household ID and enter it below.")
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .show();
+        });
+
+
         registerButton = findViewById(R.id.registerButton);
 
         userInfoDB = new userInfoDBAdapter(this);

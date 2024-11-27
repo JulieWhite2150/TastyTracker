@@ -360,5 +360,25 @@ public class foodDBAdapter {
             cursor.close();
         }
     }
+
+    public int getNumberOfRequests(int householdID){
+        int numRequests = 0;
+        String query = "SELECT COUNT(*) FROM " + "household_" + householdID + "_Requests";
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                numRequests = cursor.getInt(0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return numRequests;
+    }
 }
 

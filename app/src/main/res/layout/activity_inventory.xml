@@ -13,11 +13,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:text="upperText"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/lower_text"
-        app:layout_constraintHorizontal_bias="0.045" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/lower_text"
@@ -30,18 +30,36 @@
         app:layout_constraintBottom_toTopOf="@+id/listView"
         app:layout_constraintHorizontal_bias="0.045" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/settingsButton"
-        android:layout_marginBottom="16dp"
-        android:text="Settings"
+    <FrameLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
         app:layout_constraintBottom_toTopOf="@+id/listView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.877"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/settingsButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="Settings"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/gear_icon"
+            android:visibility="invisible"/>
+
+        <TextView
+            android:id="@+id/notificationBubble"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="end|top"
+            android:background="@drawable/circle_background"
+            android:gravity="center"
+            android:padding="2dp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:translationX="0dp"
+            android:translationY="0dp"
+            android:visibility="invisible"/>
+    </FrameLayout>
 
     <ListView
         android:id="@+id/listView"
@@ -87,5 +105,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="4dp"
         android:layout_marginBottom="16dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

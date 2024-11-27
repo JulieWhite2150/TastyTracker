@@ -1,5 +1,6 @@
 package com.example.tastytracker;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -55,6 +56,16 @@ public class ManageHouseholdActivity extends AppCompatActivity {
             Intent intent = new Intent(ManageHouseholdActivity.this, ManageRequestsActivity.class);
             startActivity(intent);
             finish();
+        });
+
+        ImageButton questionButton = findViewById(R.id.question);
+        questionButton.setOnClickListener(v -> {
+            // Create and display the AlertDialog
+            new AlertDialog.Builder(this)
+                    .setTitle("Permissions Toggle")
+                    .setMessage("Use the toggle switch to grant or revoke permissions for a user.\n\nWhen the switch is ON, the user has permissions to manage household inventory or shopping lists.\n\nWhen the switch is OFF, the user has limited access and will need to request to add items to the shopping list.")
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .show();
         });
     }
 

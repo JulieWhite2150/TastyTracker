@@ -47,28 +47,38 @@ public class HouseholdListAdapter extends ArrayAdapter<User> {
         TextView permissionsTextView = convertView.findViewById(R.id.permissionsTextView);
         SwitchMaterial permissionsSwitch = convertView.findViewById(R.id.permissionsSwitch);
 
-        usernameTextView.setText(user.getUsername());
-        permissionsTextView.setText(user.getPermissions());
+        String permissionsText = "";
 
         if (user.getPermissions().equals("HH")){
             permissionsSwitch.setVisibility(View.INVISIBLE);
+            permissionsText = "Admin";
         }
         else if (user.getPermissions().equals("MWP")){
             permissionsSwitch.setChecked(true);
+            permissionsText = "Standard";
         }
+        else{
+            permissionsText = "Limited";
+        }
+
+        usernameTextView.setText(user.getUsername());
+        permissionsTextView.setText(permissionsText);
 
         permissionsSwitch.setOnCheckedChangeListener(((buttonView, isChecked) -> {
             String newPermissions = "";
+            String newPermissionsText = "";
             userInfoDBAdapter db = new userInfoDBAdapter(this.getContext());
             db.open();
             if (isChecked){
                 newPermissions = "MWP";
+                newPermissionsText = "Standard";
             }
             else{
                 newPermissions = "MWOP";
+                newPermissionsText = "Limited";
             }
             user.changePermissions(newPermissions);
-            permissionsTextView.setText(newPermissions);
+            permissionsTextView.setText(newPermissionsText);
             db.updateUserPermissions(user.getUsername(), user.getPermissions());
             db.close();
         }));

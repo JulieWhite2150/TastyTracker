@@ -2,6 +2,7 @@ package com.example.tastytracker;
 
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 
 public class ManageRequestsActivity extends AppCompatActivity {
 
-    private int householdID;
+    private int householdID = UserSession.getInstance().getHouseholdID();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,25 +36,21 @@ public class ManageRequestsActivity extends AppCompatActivity {
             finish();
         });
 
-        // Set household ID
         householdID = UserSession.getInstance().getHouseholdID();
 
-        // Retrieve requests from the database
         foodDBAdapter db = new foodDBAdapter(this);
         db.open(householdID);
         ArrayList<foodItem> requestedItems = db.getInventoryOrRequestItems(householdID, "_Requests");
         db.close();
 
-        // Set up the RecyclerView with the adapter
         RequestsListAdapter adapter = new RequestsListAdapter(this, requestedItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        // Set up swipe gestures
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false; // No moving items
+                return false;
             }
 
             @Override
@@ -82,12 +79,12 @@ public class ManageRequestsActivity extends AppCompatActivity {
                 Paint paint = new Paint();
 
                 if (dX > 0) { // Swiping to the right (approve - green)
-                    paint.setColor(ContextCompat.getColor(ManageRequestsActivity.this, android.R.color.holo_green_dark));
+                    paint.setColor(Color.parseColor("#6ffbc3"));
                     c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(),
                             dX, (float) itemView.getBottom(), paint);
 
                 } else if (dX < 0) { // Swiping to the left (deny - red)
-                    paint.setColor(ContextCompat.getColor(ManageRequestsActivity.this, android.R.color.holo_red_light));
+                    paint.setColor(Color.parseColor("#fc8275"));
                     c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
                             (float) itemView.getRight(), (float) itemView.getBottom(), paint);
                 }

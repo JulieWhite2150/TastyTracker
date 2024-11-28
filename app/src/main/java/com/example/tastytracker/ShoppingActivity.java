@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.util.Log;
@@ -31,6 +32,12 @@ public class ShoppingActivity extends AppCompatActivity {
         ImageButton addItem = findViewById(R.id.addButton);
         ImageButton markAsShopped = findViewById(R.id.markAsShoppedButton);
         ImageButton backToInventory = findViewById(R.id.backButton);
+        ImageButton question = findViewById(R.id.question);
+
+        if (UserSession.getInstance().getPermissions().equals("MWOP")){
+            markAsShopped.setVisibility(View.INVISIBLE);
+            question.setVisibility(View.INVISIBLE);
+        }
 
         TextView introText = findViewById(R.id.intro_text);
         introText.setText("Shopping List for Household #" + householdID);

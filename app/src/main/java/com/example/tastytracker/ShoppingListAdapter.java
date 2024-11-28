@@ -40,6 +40,11 @@ public class ShoppingListAdapter extends ArrayAdapter<shoppingListItem> {
         TextView itemUnitTextView = view.findViewById(R.id.itemUnitTextView);
         ImageButton editButton = view.findViewById(R.id.editButton);
 
+        if (UserSession.getInstance().getPermissions().equals("MWOP")){
+            shoppedCheckBox.setVisibility(View.INVISIBLE);
+            editButton.setVisibility(View.INVISIBLE);
+        }
+
         shoppingListItem currentItem = mList.get(position);
         itemNameTextView.setText(currentItem.getName());
         itemQuantityTextView.setText(String.valueOf(currentItem.getQuantity()));
